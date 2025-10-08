@@ -19,11 +19,11 @@ MyVector::MyVector(const int *init_arr, const int &size)
 }
 
 MyVector::MyVector(const MyVector &other)
-: size(other.size), arr(new int[other.capacity]), capacity(other.capacity), grow(other.grow) {
+: size(other.size), capacity(other.capacity), grow(other.grow), arr(new int[other.capacity]) {
     for (int i = 0; i < size; i++) arr[i] = other.arr[i];
 }
 MyVector::MyVector(MyVector&& other)
-: size(other.size), arr(other.arr), capacity(other.capacity), grow(other.grow)
+: size(other.size), capacity(other.capacity), grow(other.grow), arr(other.arr)
 {
     other.size = 0;
     other.arr = nullptr;
