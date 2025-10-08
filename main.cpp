@@ -5,12 +5,20 @@ int main() {
     srand(time(nullptr));
 
     MyVector vector({34, 5, 3, 53});
-    vector.SetSize(15, 4);
-    vector.PushBack(344);
-    vector.PushBack(543);
-    vector.Insert(3, 9999);
-    vector.Insert(16, 342);
+    vector--;
+    vector--;
     vector.GetData();
+    vector++;
+    vector++;
+    vector++;
+    vector++;
+    vector.GetData();
+    // vector.SetSize(15, 4);
+    // vector.PushBack(344);
+    // vector.PushBack(543);
+    // vector.Insert(3, 9999);
+    // vector.Insert(16, 342);
+    // vector.GetData();
     // MyVector vector2{{43,13 ,1 ,4 }};
     // MyVector copy(vector);
     // MyVector test = vector + vector2;

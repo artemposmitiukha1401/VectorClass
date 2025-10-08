@@ -141,6 +141,19 @@ MyVector MyVector::operator+(const MyVector &other) const {
     for (int i = size; i < other.size; i++) united_vector.arr[i + size] = other.arr[i];
     return united_vector;
 }
+
+MyVector MyVector::operator++(int) {
+    MyVector temp = *this;
+    this->PushBack(0);
+    return temp;
+}
+
+MyVector MyVector::operator--(int) {
+    MyVector temp = *this;
+    if (size > 0) size--;
+    return temp;
+}
+
 void MyVector::SetSize(int new_size, int new_grow) {
     grow = new_grow;
 
