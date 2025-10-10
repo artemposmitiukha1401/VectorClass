@@ -154,6 +154,11 @@ MyVector MyVector::operator--(int) {
     return temp;
 }
 
+MyVector & MyVector::operator*=(const int value) {
+    for (int i = 0; i < size; i++) arr[i] *= value;
+    return *this;
+}
+
 void MyVector::SetSize(int new_size, int new_grow) {
     grow = new_grow;
 

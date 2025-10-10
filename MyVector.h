@@ -42,6 +42,7 @@ public:
     MyVector operator+(const MyVector& other) const;
     MyVector operator++(int);
     MyVector operator--(int);
+    MyVector& operator*=(const int value);
     void SetSize(int new_size, int new_grow);
     void PushBack(int value);
     void Insert(int index, int value);

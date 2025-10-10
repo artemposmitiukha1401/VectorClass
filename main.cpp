@@ -5,13 +5,8 @@ int main() {
     srand(time(nullptr));
 
     MyVector vector({34, 5, 3, 53});
-    vector--;
-    vector--;
     vector.GetData();
-    vector++;
-    vector++;
-    vector++;
-    vector++;
+    vector *= 5;
     vector.GetData();
     // vector.SetSize(15, 4);
     // vector.PushBack(344);
