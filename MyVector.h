@@ -14,9 +14,11 @@ public:
     MyVector(const MyVector& other);
     MyVector(MyVector&& other);
     ~MyVector() { delete[] arr; }
+    int GetGrow() const { return grow; }
     int GetSize() const { return size; }
     void Append(const MyVector& other);
     void RemoveAll();
+    void DecreaseSize() { if (size > 0) size--; }
     bool IsEmpty() const;
     int GetAt(int index) const;
     void SetAt(const int index, const int value);

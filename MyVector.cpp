@@ -30,6 +30,7 @@ MyVector::MyVector(MyVector&& other)
     other.capacity = 0;
 }
 
+
 void MyVector::Append(const MyVector &other) {
     int buffer_size = capacity + other.capacity;
     int* buffer = new int[buffer_size];
@@ -47,6 +48,7 @@ void MyVector::RemoveAll() {
     capacity = 0;
     size = 0;
 }
+
 
 bool MyVector::IsEmpty() const {
     return size == 0 || arr == nullptr;
@@ -173,6 +175,7 @@ void MyVector::SetSize(int new_size, int new_grow) {
         for (int i = 0; i < size; i++) buffer_arr[i] = arr[i];
 
         delete[] arr;
+
         arr = buffer_arr;
         capacity = new_capacity;
     }

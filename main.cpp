@@ -1,13 +1,32 @@
 #include <iostream>
 #include "MyVector.h"
 
+MyVector operator+(const int value, MyVector &v) {
+    for (int i = 0; i < v.GetSize(); ++i)
+        v[i] += value;
+    return v;
+}
+
+MyVector& operator--(MyVector &v) {
+    if (v.GetSize() <= 0) return v;
+
+    for (int i = 0; i < v.GetSize() - 1; i++) v[i] = v[i + 1];
+
+    v.DecreaseSize();
+    return v;
+}
 int main() {
     srand(time(nullptr));
 
     MyVector vector({34, 5, 3, 53});
-    vector.GetData();
-    vector *= 5;
-    vector.GetData();
+    // vector.GetData();
+    // vector *= 5;
+    // vector.GetData();
+    MyVector vector_2 = 10 + vector;
+    vector_2.GetData();
+    MyVector vector_3 = --vector_2;
+    vector_3.GetData();
+    vector_2.GetData();
     // vector.SetSize(15, 4);
     // vector.PushBack(344);
     // vector.PushBack(543);
