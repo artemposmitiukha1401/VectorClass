@@ -1,7 +1,7 @@
 #include <iostream>
 #include "MyVector.h"
 
-MyVector operator+(const int value, MyVector &v) {
+MyVector& operator+(const int value, MyVector &v) {
     for (int i = 0; i < v.GetSize(); ++i)
         v[i] += value;
     return v;
