@@ -161,6 +161,7 @@ MyVector & MyVector::operator*=(const int value) {
     return *this;
 }
 
+
 void MyVector::SetSize(int new_size, int new_grow) {
     grow = new_grow;
 

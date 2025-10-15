@@ -1,6 +1,8 @@
 #ifndef MYVECTOR_H
 #define MYVECTOR_H
 #include <initializer_list>
+#include <iosfwd>
+#include <ostream>
 
 class MyVector {
     int size = 0;
@@ -45,6 +47,7 @@ public:
     MyVector operator++(int);
     MyVector operator--(int);
     MyVector& operator*=(const int value);
+
     void SetSize(int new_size, int new_grow);
     void PushBack(int value);
     void Insert(int index, int value);
