@@ -1,13 +1,16 @@
 #include <iostream>
+#include <string.h>
 #include "MyVector.h"
 
-MyVector& operator+(const int value, MyVector &v) {
+template <class T>
+MyVector<T>& operator+(const int value, MyVector<T> &v) {
     for (int i = 0; i < v.GetSize(); ++i)
         v[i] += value;
     return v;
 }
 
-MyVector& operator--(MyVector &v) {
+template <class T>
+MyVector<T>& operator--(MyVector<T> &v) {
     if (v.GetSize() <= 0) return v;
 
     for (int i = 0; i < v.GetSize() - 1; i++) v[i] = v[i + 1];
@@ -15,14 +18,15 @@ MyVector& operator--(MyVector &v) {
     v.DecreaseSize();
     return v;
 }
-std::ostream& operator<<(std::ostream& os, const MyVector& v) {
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, const MyVector<T>& v) {
     for (int i = 0; i < v.GetSize(); i++) os << "[" << v[i] << "] ";
-    os << "\n[VECTOR LENGTH]: " << v.GetSize() << std::endl;
-    os << "[VECTOR GROW]: " << v.GetGrow() << std::endl;
     return os;
 }
 
-std::istream& operator>>(std::istream& is, MyVector& v) {
+template <class T>
+std::istream& operator>>(std::istream& is, MyVector<T>& v) {
     int min_range = 0;
     int max_range = 0;
     std::cout << "Enter min range for values: ";
@@ -36,9 +40,21 @@ std::istream& operator>>(std::istream& is, MyVector& v) {
 int main() {
     srand(time(nullptr));
 
-    MyVector vector({34, 5, 3, 53});
-    std::cout << vector;
-    std::cin >> vector;
+    // MyVector vector{{34, 5, 3, 53}};
+    // MyVector<double> vector2{{342.32 , 342.42542}};
+    // vector2.GetData();
+    // std::string arr = {"4534534", "dfgdfg"};
+    MyVector<std::string> vector_3{"sfdfds", "fgfdsg"};
+    // vector_3 = arr;
+    vector_3.GetData();
+    vector_3.PushBack("dgsfg");
+    vector_3.GetData();
+
+
+    // std::cout << vector;
+    // vector();
+
+
     // vector.GetData();
     // vector *= 5;
     // vector.GetData();
