@@ -314,7 +314,7 @@ template <class T>
 void MyVector<T>::SortByCmp() requires std::same_as<T, std::string> {
     for (size_t i = 0; i < size; i++) {
         for (size_t j = size - 1; j > i; j--) {
-            if (arr[j - 1].length() > arr[j].length())
+            if (arr[j - 1] > arr[j])
                 std::swap(arr[j], arr[j - 1]);
         }
     }

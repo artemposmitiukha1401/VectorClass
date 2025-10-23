@@ -56,8 +56,10 @@ int main() {
     // // MyVector<double> vector2{{342.32 , 342.42542}};
     // // vector2.GetData();
     // // std::string arr = {"4534534", "dfgdfg"};
-    // vec_s string_vector{{"dfsfdsfds", "fsdfdsf", "fdsf"}};
-    // string_vector.GetData();
+    vec_s string_vector{{"dfsfdsfds", "fsdfdsf", "fdsf"}};
+    string_vector.GetData();
+    string_vector.SortByCmp();
+    string_vector.GetData();
     // vec_i nums_vector{{4543, 653, 234}};
     // nums_vector.GetData();
     // nums_vector *= 5;
