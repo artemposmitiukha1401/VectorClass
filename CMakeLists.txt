@@ -4,5 +4,6 @@ project(vector_class)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(vector_class main.cpp
-        MyVector.cpp
-        MyVector.h)
+        MyVector.h
+        Subscriber.h
+        Subscriber.cpp)

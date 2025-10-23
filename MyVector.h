@@ -2,17 +2,19 @@
 #define MYVECTOR_H
 #include <initializer_list>
 #include <iostream>
+#include <string>
 
-template <class T>
+template <class ArrayType = int>
 class MyVector {
     int size = 0;
     int capacity = 0;
     int grow = 1;
-    T* arr = nullptr;
+    ArrayType* arr = nullptr;
 public:
-    MyVector(int size);
-    MyVector(std::initializer_list<T> init_arr);
-    MyVector(const T* init_arr, const int& size);
+    explicit MyVector(int size);
+    MyVector(std::initializer_list<ArrayType> init_arr);
+    template <const int SIZE>
+    MyVector(const ArrayType (&init_arr)[SIZE]);
     MyVector(const MyVector& other);
     MyVector(MyVector&& other);
     ~MyVector() { delete[] arr; }
@@ -23,39 +25,37 @@ public:
     void DecreaseSize() { if (size > 0) size--; }
     bool IsEmpty() const;
 
-    T GetAt(int index) const;
-    void SetAt(const int index, const T value);
+    ArrayType GetAt(int index) const;
+    void SetAt(int index, ArrayType value);
     void GetData() const;
     void FillArr();
-    void FillArr(const int min_range, const int max_range);
-    void FillArr(const int max_range);
-    static int GetRandNum();
-    static int GetRandNum(const int min_range, const int max_range);
-    static int GetRandNum(const int max_range);
-    void SortByIncreasing();
-    void SortByDecreasing();
+    void FillArr(int min_range, int max_range);
+    void FillArr(int max_range);
 
-    T& operator[](int index) {
-        if (index >= 0 && index < GetSize()) return arr[index];
-        else return arr[0];
-    }
-    const T& operator[](int index) const {
-        if (index >= 0 && index < GetSize()) return arr[index];
-        else return arr[0];
-    }
+    static int GetRandNum();
+    static int GetRandNum(int min_range, int max_range);
+    static int GetRandNum(int max_range);
+
+    void SortByIncreasing() requires std::same_as<ArrayType, int> or std::same_as<ArrayType, double> or std::same_as<ArrayType, float>;
+    void SortByDecreasing() requires std::same_as<ArrayType, int> or std::same_as<ArrayType, double> or std::same_as<ArrayType, float>;
+
+    ArrayType& operator[](int index);
+    const ArrayType& operator[](int index) const;
     MyVector& operator=(const MyVector& other);
     MyVector operator+(const MyVector& other) const;
     MyVector operator++(int);
     MyVector operator--(int);
-    MyVector& operator*=(const int value);
+    MyVector& operator*=(ArrayType value) requires std::same_as<ArrayType, int> or std::same_as<ArrayType, double> or std::same_as<ArrayType, float>;
     void operator()() const;
 
     void SetSize(int new_size, int new_grow);
-    void PushBack(const T& value);
-    void Insert(int index, const T& value);
+    void PushBack(const ArrayType& value);
+    void Insert(int index, const ArrayType& value);
 
+    void SortByLength() requires std::same_as<ArrayType, std::string>;
+    void SortByCmp() requires std::same_as<ArrayType, std::string>;
 };
-
+#endif
 
 constexpr int MIN_RAND = -100;
 constexpr int MAX_RAND = 100;
@@ -69,9 +69,11 @@ MyVector<T>::MyVector(std::initializer_list<T> init_arr)
     int i = 0;
     for (T value : init_arr) arr[i++] = value;
 }
+
 template <class T>
-MyVector<T>::MyVector(const T *init_arr, const int &size)
-: size(size), capacity(size), grow(1), arr(new T[size]) {
+template <const int SIZE>
+MyVector<T>::MyVector(const T (&init_arr)[SIZE])
+: size(SIZE), capacity(SIZE), arr(new T[SIZE]) {
     for (int i = 0; i < size; i++) arr[i] = init_arr[i];
 }
 
@@ -80,6 +82,7 @@ MyVector<T>::MyVector(const MyVector &other)
 : size(other.size), capacity(other.capacity), grow(other.grow), arr(new T[other.capacity]) {
     for (int i = 0; i < size; i++) arr[i] = other.arr[i];
 }
+
 template <class T>
 MyVector<T>::MyVector(MyVector&& other)
 : size(other.size), capacity(other.capacity), grow(other.grow), arr(other.arr)
@@ -170,7 +173,7 @@ template <class T>
 int MyVector<T>::GetRandNum(const int max_range) { return rand() % max_range; }
 
 template <class T>
-void MyVector<T>::SortByIncreasing() {
+void MyVector<T>::SortByIncreasing() requires std::same_as<T, int> or std::same_as<T, double> or std::same_as<T, float> {
     for (size_t i = 0; i < size; i++) {
         for (size_t j = size - 1; j > i; j--) {
             if (arr[j] < arr[j - 1])
@@ -180,13 +183,25 @@ void MyVector<T>::SortByIncreasing() {
 }
 
 template <class T>
-void MyVector<T>::SortByDecreasing() {
+void MyVector<T>::SortByDecreasing() requires std::same_as<T, int> or std::same_as<T, double> or std::same_as<T, float> {
     for (size_t i = 0; i < size; i++) {
         for (size_t j = size - 1; j > i; j--) {
             if (arr[j] > arr[j - 1])
                 std::swap(arr[j], arr[j - 1]);
         }
     }
+}
+
+template<class ArrayType>
+ArrayType & MyVector<ArrayType>::operator[](int index) {
+    if (index >= 0 && index < GetSize()) return arr[index];
+    else return arr[0];
+}
+
+template<class ArrayType>
+const ArrayType & MyVector<ArrayType>::operator[](int index) const {
+    if (index >= 0 && index < GetSize()) return arr[index];
+    return arr[0];
 }
 
 template <class T>
@@ -209,7 +224,7 @@ MyVector<T> MyVector<T>::operator+(const MyVector &other) const {
     united_vector.grow = this->grow;
     united_vector.size = this->size + other.size;
     for (int i = 0; i < size; i++) united_vector.arr[i] = arr[i];
-    for (int i = size; i < other.size; i++) united_vector.arr[i + size] = other.arr[i];
+    for (int i = 0; i < other.size; i++) united_vector.arr[i + size] = other.arr[i];
     return united_vector;
 }
 
@@ -228,7 +243,7 @@ MyVector<T> MyVector<T>::operator--(int) {
 }
 
 template <class T>
-MyVector<T> & MyVector<T>::operator*=(const int value) {
+MyVector<T> & MyVector<T>::operator*=(const T value) requires std::same_as<T, int> or std::same_as<T, double> or std::same_as<T, float> {
     for (int i = 0; i < size; i++) arr[i] *= value;
     return *this;
 }
@@ -284,4 +299,23 @@ void MyVector<T>::Insert(int index, const T& value) {
     size++;
 }
 
-#endif
+template <class T>
+void MyVector<T>::SortByLength()
+requires std::same_as<T, std::string> {
+    for (size_t i = 0; i < size; i++) {
+        for (size_t j = size - 1; j > i; j--) {
+            if (arr[j].length() < arr[j - 1].length())
+                std::swap(arr[j], arr[j - 1]);
+        }
+    }
+}
+
+template <class T>
+void MyVector<T>::SortByCmp() requires std::same_as<T, std::string> {
+    for (size_t i = 0; i < size; i++) {
+        for (size_t j = size - 1; j > i; j--) {
+            if (arr[j - 1].length() > arr[j].length())
+                std::swap(arr[j], arr[j - 1]);
+        }
+    }
+}
