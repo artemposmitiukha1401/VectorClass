@@ -60,6 +60,7 @@ int main() {
     string_vector.GetData();
     string_vector.SortByCmp();
     string_vector.GetData();
+    string_vector.Insert(99, "fdsfg");
     // vec_i nums_vector{{4543, 653, 234}};
     // nums_vector.GetData();
     // nums_vector *= 5;

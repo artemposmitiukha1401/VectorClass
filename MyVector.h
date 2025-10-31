@@ -94,7 +94,7 @@ MyVector<T>::MyVector(MyVector&& other)
 
 template <class T>
 void MyVector<T>::Append(const MyVector &other) {
-    int buffer_size = capacity + other.capacity;
+    int buffer_size = size + other.size;
     T* buffer = new T[buffer_size];
     for (int i = 0; i < size; i++) buffer[i] = arr[i];
     for (int i = 0; i < other.size; i++) buffer[i + size] = other.arr[i];
@@ -118,17 +118,25 @@ bool MyVector<T>::IsEmpty() const {
 
 template <class T>
 T MyVector<T>::GetAt(const int index) const {
-    if (index >= 0 && index < size) return arr[index];
-    return -1;
+    try {
+        if (index < 0 || index >= size) throw std::out_of_range("MyVector::GetAt > Index out of range");
+        return arr[index];
+    }
+    catch (std::out_of_range &e) {
+        std::cerr << e.what() << std::endl;
+    }
+    return arr[0];
 }
 
 template <class T>
 void MyVector<T>::SetAt(const int index, const T value) {
-    if (index < 0 || index >= size) {
-        std::cerr << "Index out of bounds\n";
-        return;
+    try {
+        if (index < 0 || index >= size) throw std::out_of_range("MyVector::SetAt > Index out of range");
+        arr[index] = value;
     }
-    arr[index] = value;
+    catch (std::out_of_range &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 template <class T>
@@ -174,8 +182,8 @@ int MyVector<T>::GetRandNum(const int max_range) { return rand() % max_range; }
 
 template <class T>
 void MyVector<T>::SortByIncreasing() requires std::same_as<T, int> or std::same_as<T, double> or std::same_as<T, float> {
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = size - 1; j > i; j--) {
+    for (int i = 0; i < size; i++) {
+        for (int j = size - 1; j > i; j--) {
             if (arr[j] < arr[j - 1])
                 std::swap(arr[j], arr[j - 1]);
         }
@@ -184,8 +192,8 @@ void MyVector<T>::SortByIncreasing() requires std::same_as<T, int> or std::same_
 
 template <class T>
 void MyVector<T>::SortByDecreasing() requires std::same_as<T, int> or std::same_as<T, double> or std::same_as<T, float> {
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = size - 1; j > i; j--) {
+    for (int i = 0; i < size; i++) {
+        for (int j = size - 1; j > i; j--) {
             if (arr[j] > arr[j - 1])
                 std::swap(arr[j], arr[j - 1]);
         }
@@ -257,29 +265,36 @@ void MyVector<T>::operator()() const {
 
 template <class T>
 void MyVector<T>::SetSize(int new_size, int new_grow) {
-    grow = new_grow;
+    try {
+        if (new_size <= 0) throw std::invalid_argument("MyVector<T>::SetSize > Invalid size");
+        if (new_grow <= 0) throw std::invalid_argument("MyVector<T>::SetSize > Invalid grow");
+        grow = new_grow;
 
-    if (new_size > capacity) {
+        if (new_size > capacity) {
 
-        int new_capacity = capacity;
+            int new_capacity = capacity;
 
-        while (new_capacity < new_size)
-            new_capacity += grow;
+            while (new_capacity < new_size)
+                new_capacity += grow;
 
-        T* buffer_arr = new T[new_capacity]{};
-        for (int i = 0; i < size; i++) buffer_arr[i] = arr[i];
+            T* buffer_arr = new T[new_capacity]{};
+            for (int i = 0; i < size; i++) buffer_arr[i] = arr[i];
 
-        delete[] arr;
+            delete[] arr;
 
-        arr = buffer_arr;
-        capacity = new_capacity;
+            arr = buffer_arr;
+            capacity = new_capacity;
+        }
+    }
+    catch (std::invalid_argument &e) {
+        std::cout << e.what() << std::endl;
     }
 
 }
 
 template <class T>
 void MyVector<T>::PushBack(const T& value) {
-        if (size >= capacity) SetSize(size + 1, grow);
+    if (size >= capacity) SetSize(size + 1, grow);
 
     arr[size] = value;
     size++;
@@ -287,23 +302,24 @@ void MyVector<T>::PushBack(const T& value) {
 
 template <class T>
 void MyVector<T>::Insert(int index, const T& value) {
-    if (index < 0 || index > size) {
-        std::cerr << "Invalid index\n";
-        return;
+    try {
+        if (index < 0 || index > size) throw std::out_of_range("MyVector::Insert > Index out of range");
+        if (size >= capacity) SetSize(size + 1, grow);
+        for (int i = size; i > index; i--) arr[i] = arr[i - 1];
+
+        arr[index] = value;
+        size++;
     }
-
-    if (size >= capacity) SetSize(size + 1, grow);
-    for (int i = size; i > index; i--) arr[i] = arr[i - 1];
-
-    arr[index] = value;
-    size++;
+    catch (std::out_of_range &e) {
+        std::cerr << e.what() << "\n";
+    }
 }
 
 template <class T>
 void MyVector<T>::SortByLength()
 requires std::same_as<T, std::string> {
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = size - 1; j > i; j--) {
+    for (int i = 0; i < size; i++) {
+        for (int j = size - 1; j > i; j--) {
             if (arr[j].length() < arr[j - 1].length())
                 std::swap(arr[j], arr[j - 1]);
         }
@@ -312,8 +328,8 @@ requires std::same_as<T, std::string> {
 
 template <class T>
 void MyVector<T>::SortByCmp() requires std::same_as<T, std::string> {
-    for (size_t i = 0; i < size; i++) {
-        for (size_t j = size - 1; j > i; j--) {
+    for (int i = 0; i < size; i++) {
+        for (int j = size - 1; j > i; j--) {
             if (arr[j - 1] > arr[j])
                 std::swap(arr[j], arr[j - 1]);
         }
